@@ -7,13 +7,13 @@ Build on Celo: [docs.celo.org/developer-guide/overview](https://docs.celo.org/de
 
 ## How to interact with this contract
 
-Follow the steps below before you go to the [website](https://celo-market.herokuapp.com/) to interact with the contract.
+Follow the steps below before you go to [marketplace-celo.herokuapp.com](https://marketplace-celo.herokuapp.com/) (deployed at heroku) to interact with the contract.
 
 1. Install the [CeloExtensionWallet](https://chrome.google.com/webstore/detail/celoextensionwallet/kkilomkmpmkbdnfelcpgckmpcaemjcdh?hl=en) from the Google Chrome Store.
 2. Create a wallet.
 3. Go to [celo.org/developers/faucet](https://celo.org/developers/faucet) and get some token for the alfajores testnet.
 4. Switch to the alfajores testnet in the CeloExtensionWallet.
-5. Try to add- or buy a product at the  [website](https://celo-market.herokuapp.com/).
+5. Try to add- or buy a product at [marketplace-celo.herokuapp.com](https://marketplace-celo.herokuapp.com/).
 
 
 ## Deployed Contract
