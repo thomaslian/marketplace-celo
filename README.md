@@ -7,7 +7,7 @@ Build on Celo: [docs.celo.org/developer-guide/overview](https://docs.celo.org/de
 
 ## How to interact with this contract
 
-Follow the steps below before you go to [website](https://celo-market.herokuapp.com/) to interact with the contract.
+Follow the steps below before you go to the [website](https://celo-market.herokuapp.com/) to interact with the contract.
 
 1. Install the [CeloExtensionWallet](https://chrome.google.com/webstore/detail/celoextensionwallet/kkilomkmpmkbdnfelcpgckmpcaemjcdh?hl=en) from the Google Chrome Store.
 2. Create a wallet.
