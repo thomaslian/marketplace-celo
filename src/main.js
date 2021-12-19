@@ -63,7 +63,6 @@ const getProducts = async () => {
                 name: p[1],
                 image: p[2],
                 description: p[3],
-                location: p[4],
                 price: new BigNumber(p[5]), // Needs to be a bigNumber object 
                 sold: p[6],
             });
@@ -99,10 +98,6 @@ function productTemplate(product) {
             <h2 class="card-title fs-4 fw-bold mt-2">${product.name}</h2>
             <p class="card-text mb-4" style="min-height: 82px">
               ${product.description}             
-            </p>
-            <p class="card-text mt-4">
-              <i class="bi bi-geo-alt-fill"></i>
-              <span>${product.location}</span>
             </p>
             <div class="d-grid gap-2">
               <a class="btn btn-lg btn-outline-dark buyBtn fs-6 p-3" id=${product.index}>
@@ -155,7 +150,6 @@ document.querySelector("#newProductBtn").addEventListener("click", async () => {
         document.getElementById("newProductName").value,
         document.getElementById("newImgUrl").value,
         document.getElementById("newProductDescription").value,
-        document.getElementById("newLocation").value,
         // Create a bigNumber object so the contract can read it
         new BigNumber(document.getElementById("newPrice").value).shiftedBy(ERC20_DECIMALS).toString()
     ];

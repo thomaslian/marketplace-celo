@@ -24,7 +24,6 @@ contract Marketplace {
         string name;
         string image;
         string description;
-        string location;
         uint price;
         uint sold;
     }
@@ -34,8 +33,7 @@ contract Marketplace {
     function writeProduct(
         string memory _name,
         string memory _image,
-        string memory _description, 
-        string memory _location, 
+        string memory _description,
         uint _price
     ) public {
         uint _sold = 0;
@@ -44,7 +42,6 @@ contract Marketplace {
             _name,
             _image,
             _description,
-            _location,
             _price,
             _sold
         );
@@ -55,8 +52,7 @@ contract Marketplace {
         address payable,
         string memory, 
         string memory, 
-        string memory, 
-        string memory, 
+        string memory,
         uint, 
         uint
     ) {
@@ -65,7 +61,6 @@ contract Marketplace {
             products[_index].name, 
             products[_index].image, 
             products[_index].description, 
-            products[_index].location, 
             products[_index].price,
             products[_index].sold
         );
