@@ -86,23 +86,23 @@ function renderProducts() {
 
 function productTemplate(product) {
     return `
-        <div class="card mb-4">
+        <div class="card border-secondary mb-4">
             <img class="card-img-top" src="${product.image}" alt="Card image">
             <div class="position-absolute top-0 end-0 bg-warning mt-4 px-2 py-1 rounded-start">
                 ${product.sold} Sold
             </div>
             <div class="card-body text-left p-4 position-relative">
-            <div class="translate-middle-y position-absolute top-0">
-                ${identiconTemplate(product.owner)}
-            </div>
-            <h2 class="card-title fs-4 fw-bold mt-2">${product.name}</h2>
-            <p class="card-text mb-4" style="min-height: 82px">
-              ${product.description}             
-            </p>
-            <div class="d-grid gap-2">
-              <a class="btn btn-lg btn-outline-dark buyBtn fs-6 p-3" id=${product.index}>
-                Buy for ${product.price.shiftedBy(-ERC20_DECIMALS).toFixed(2)} cUSD
-              </a>
+                <div class="translate-middle-y position-absolute top-0">
+                    ${identiconTemplate(product.owner)}
+                </div>
+                <h2 class="card-title fs-4 fw-bold mt-2">${product.name}</h2>
+                <p class="card-text mb-4" style="min-height: 82px">
+                ${product.description}             
+                </p>
+                <div class="d-grid gap-2">
+                <a class="btn btn-lg btn-outline-dark buyBtn fs-6 p-3" id=${product.index}>
+                    Buy for ${product.price.shiftedBy(-ERC20_DECIMALS).toFixed(2)} cUSD
+                </a>
             </div>
           </div>
         </div>
