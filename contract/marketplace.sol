@@ -35,7 +35,6 @@ contract Marketplace {
         string memory _name,
         string memory _image,
         string memory _description,
-        uint _prevPrice,
         uint _price
     ) public {
         bool _sold = false;
@@ -45,7 +44,7 @@ contract Marketplace {
             _image,
             _description,
             _price,
-            _prevPrice,
+            0,
             _sold
         );
         productsLength++;
