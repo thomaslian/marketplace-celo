@@ -24,9 +24,9 @@ contract Marketplace {
         string name;
         string image;
         string description;
-        string location;
         uint price;
-        uint sold;
+        uint prevPrice;
+        bool sold;
     }
 
     mapping (uint => Product) internal products;
@@ -34,18 +34,17 @@ contract Marketplace {
     function writeProduct(
         string memory _name,
         string memory _image,
-        string memory _description, 
-        string memory _location, 
+        string memory _description,
         uint _price
     ) public {
-        uint _sold = 0;
+        bool _sold = false;
         products[productsLength] = Product(
             payable(msg.sender),
             _name,
             _image,
             _description,
-            _location,
             _price,
+            0,
             _sold
         );
         productsLength++;
@@ -55,18 +54,18 @@ contract Marketplace {
         address payable,
         string memory, 
         string memory, 
-        string memory, 
-        string memory, 
+        string memory,
         uint, 
-        uint
+        uint,
+        bool
     ) {
         return (
             products[_index].owner,
             products[_index].name, 
             products[_index].image, 
             products[_index].description, 
-            products[_index].location, 
             products[_index].price,
+            products[_index].prevPrice,
             products[_index].sold
         );
     }
@@ -80,10 +79,25 @@ contract Marketplace {
           ),
           "Transfer failed."
         );
-        products[_index].sold++;
+        products[_index].sold = true;
+        products[_index].prevPrice = products[_index].price;
     }
     
     function getProductsLength() public view returns (uint) {
         return (productsLength);
+    }
+
+    function getContractAddress() public view returns (address) {
+        return (address(this));
+    }
+
+    function getTotalPriceOfNFTs() public view returns (uint) {
+        uint _totalPrice = 0;
+        if (productsLength > 0) {
+            for (uint i = 0; i < productsLength; i++) {
+                _totalPrice += products[i].price;
+            }
+        }
+        return (_totalPrice);
     }
 }

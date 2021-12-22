@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css" />
@@ -20,9 +20,9 @@
 
         @media (min-width: 576px) {
             .card {
-                border: 0;
                 box-shadow: rgb(0 0 0 / 5%) 0px 10px 20px;
                 border-radius: 10px;
+                overflow: hidden;
             }
 
             .card-img-top {
@@ -33,7 +33,7 @@
         }
     </style>
 
-    <title>Street Food Kigali</title>
+    <title>NFT Marketplace - Celo blockchain</title>
 </head>
 
 <body>
@@ -41,7 +41,8 @@
 
         <nav class="navbar bg-white navbar-light">
             <div class="container-fluid">
-                <span class="navbar-brand m-0 h4 fw-bold">Street Food Kigali</span>
+                <span class="navbar-brand m-0 h4 fw-bold">NFT Marketplace</span>
+                <span>Total price of all NFTs: <span id="totalPrice">0</span> cUSD</span>
                 <span class="nav-link border rounded-pill bg-light">
                     <span id="balance">0</span>
                     cUSD
@@ -55,7 +56,7 @@
 
         <div class="mb-4" style="margin-top: 4em">
             <a class="btn btn-dark rounded-pill" data-bs-toggle="modal" data-bs-target="#addModal">
-                Add product
+                Add NFT
             </a>
         </div>
 
@@ -67,31 +68,26 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newProductModalLabel">New Product</h5>
+                    <h5 class="modal-title" id="newProductModalLabel">New NFT</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="form-row">
-                            <div class="col">
-                                <input type="text" id="newProductName" class="form-control mb-2"
-                                    placeholder="Enter name of product" />
-                            </div>
-                            <div class="col">
-                                <input type="text" id="newImgUrl" class="form-control mb-2"
-                                    placeholder="Enter image url" />
-                            </div>
-                            <div class="col">
-                                <input type="text" id="newProductDescription" class="form-control mb-2"
-                                    placeholder="Enter product description" />
-                            </div>
-                            <div class="col">
-                                <input type="text" id="newLocation" class="form-control mb-2"
-                                    placeholder="Enter location" />
-                            </div>
-                            <div class="col">
-                                <input type="text" id="newPrice" class="form-control mb-2" placeholder="Enter price" />
-                            </div>
+                        <div class="form-floating col">
+                            <input type="text" id="newProductName" class="form-control mb-2" placeholder="Name of NFT" />
+                            <label for="nedProductName">Name of NFT</label>
+                        </div>
+                        <div class="form-floating col">
+                            <input type="text" id="newImgUrl" class="form-control mb-2" placeholder="NFT (image) url" />
+                            <label for="newImgUrl">NFT (image) url</label>
+                        </div>
+                        <div class="form-floating col">
+                            <input type="text" id="newProductDescription" class="form-control mb-2" placeholder="NFT description" />
+                            <label for="newProductDescription">NFT description</label>
+                        </div>
+                        <div class="form-floating col">
+                            <input type="text" id="newPrice" class="form-control mb-2" placeholder="Price in cUSD" />
+                            <label for="newPrice">Price in cUSD</label>
                         </div>
                     </form>
                 </div>
@@ -100,7 +96,7 @@
                         Close
                     </button>
                     <button type="button" class="btn btn-dark" data-bs-dismiss="modal" id="newProductBtn">
-                        Add product
+                        Add NFT
                     </button>
                 </div>
             </div>
@@ -108,8 +104,8 @@
     </div>
     <!--/Modal-->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://unpkg.com/ethereum-blockies@0.1.1/blockies.min.js"></script>
 </body>

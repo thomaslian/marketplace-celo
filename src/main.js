@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import marketplaceAbi from '../contract/marketplace.abi.json';
 import erc20Abi from "../contract/erc20.abi.json";
 
-const MPContractAddress = "0xb3b8F2f1ade9BEbd94433e8400000C5F7887606e"; // Marketplace contract address
+const MPContractAddress = "0x1Ddca354FF9269F9CC4122730A4B82F7eA66cb94"; // Marketplace contract address
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"; // cUSD contract address
 const ERC20_DECIMALS = 18;
 
@@ -50,6 +50,12 @@ const getBalance = async () => {
     document.querySelector("#balance").textContent = cUSDBalance;
 }
 
+const getTotalPriceOfNFTs = async () => {
+    let totalPrice = await contract.methods.getTotalPriceOfNFTs().call();
+    totalPrice /= Math.pow(10, ERC20_DECIMALS).toFixed(2);
+    document.querySelector("#totalPrice").textContent = totalPrice;
+}
+
 const getProducts = async () => {
     const productsLength = await contract.methods.getProductsLength().call();
     const _products = [];
@@ -63,9 +69,8 @@ const getProducts = async () => {
                 name: p[1],
                 image: p[2],
                 description: p[3],
-                location: p[4],
-                price: new BigNumber(p[5]), // Needs to be a bigNumber object 
-                sold: p[6],
+                price: new BigNumber(p[4]), // Needs to be a bigNumber object 
+                sold: p[5],
             });
             reject(error => { console.log(error) }); // Reject the promise if there is an error    
         });
@@ -73,6 +78,10 @@ const getProducts = async () => {
     }
     products = await Promise.all(_products);
     renderProducts();
+}
+
+const getContractAddress = async () => {
+    console.log(await contract.methods.getContractAddress().call());
 }
 
 function renderProducts() {
@@ -86,28 +95,26 @@ function renderProducts() {
 }
 
 function productTemplate(product) {
+    const productSold = parseInt(product.sold);
+    const productPrice = (product.price / Math.pow(10, ERC20_DECIMALS).toFixed(2));
     return `
-        <div class="card mb-4">
+        <div class="card border-secondary mb-4">
             <img class="card-img-top" src="${product.image}" alt="Card image">
-            <div class="position-absolute top-0 end-0 bg-warning mt-4 px-2 py-1 rounded-start">
-                ${product.sold} Sold
+            <div class="position-absolute top-0 end-0 ${productSold ? `bg-danger text-white` : `bg-warning`} mt-4 px-2 py-1 rounded-start">
+                ${productSold ? "Sold" : "For Sale"}
             </div>
             <div class="card-body text-left p-4 position-relative">
-            <div class="translate-middle-y position-absolute top-0">
-                ${identiconTemplate(product.owner)}
-            </div>
-            <h2 class="card-title fs-4 fw-bold mt-2">${product.name}</h2>
-            <p class="card-text mb-4" style="min-height: 82px">
-              ${product.description}             
-            </p>
-            <p class="card-text mt-4">
-              <i class="bi bi-geo-alt-fill"></i>
-              <span>${product.location}</span>
-            </p>
-            <div class="d-grid gap-2">
-              <a class="btn btn-lg btn-outline-dark buyBtn fs-6 p-3" id=${product.index}>
-                Buy for ${product.price.shiftedBy(-ERC20_DECIMALS).toFixed(2)} cUSD
-              </a>
+                <div class="translate-middle-y position-absolute top-0">
+                    ${identiconTemplate(product.owner)}
+                </div>
+                <h2 class="card-title fs-4 fw-bold mt-2">${product.name}</h2>
+                <p class="card-text mb-4" style="min-height: 82px">
+                ${product.description}             
+                </p>
+                <div class="d-grid gap-2">
+                <a class="btn btn-lg buyBtn fs-6 p-3 ${productSold ? "btn-secondary disabled" : "btn-outline-dark"}" id=${product.index}>
+                    Buy for ${productPrice} cUSD
+                </a>
             </div>
           </div>
         </div>
@@ -146,30 +153,41 @@ window.addEventListener("load", async () => {
     notification("⌛ Loading...");
     await connectCeloWallet();
     await getBalance();
+    await getTotalPriceOfNFTs();
     await getProducts();
+    await getContractAddress();
     notificationOff();
 });
 
 document.querySelector("#newProductBtn").addEventListener("click", async () => {
+    const name = document.getElementById("newProductName").value;
+    const imageUrl = document.getElementById("newImgUrl").value;
+    const description = document.getElementById("newProductDescription").value;
+    const price = document.getElementById("newPrice").value;
+
+    if (!name, !imageUrl, !description, !price) {
+        notification("⚠️ Please fill in all fields in the form.");
+        return;
+    }
+
     const params = [
-        document.getElementById("newProductName").value,
-        document.getElementById("newImgUrl").value,
-        document.getElementById("newProductDescription").value,
-        document.getElementById("newLocation").value,
+        name,
+        imageUrl,
+        description,
         // Create a bigNumber object so the contract can read it
-        new BigNumber(document.getElementById("newPrice").value).shiftedBy(ERC20_DECIMALS).toString()
+        new BigNumber(price).shiftedBy(ERC20_DECIMALS).toString()
     ];
     notification(`⌛ Adding "${params[0]}"...`);
 
-    try {
-        const result = await contract.methods
-            .writeProduct(...params)
-            .send({ from: kit.defaultAccount }) // Sebd a trabsaction to the contract, using the default account
-    } catch (error) {
-        notification(`⚠️ ${error}.`)
-    }
-    notification(`🎉 You successfully added "${params[0]}".`);
-    getProducts();
+    contract.methods.writeProduct(...params).send({ from: kit.defaultAccount }).then(async (res) => {
+        console.log(res);
+        notification(`🎉 You successfully added "${params[0]}".`);
+        await getProducts();
+        await getTotalPriceOfNFTs();
+    }).catch(err => {
+        console.log(err);
+        notification(`⚠️ ${error}.`);
+    });
 });
 
 document.querySelector("#marketplace").addEventListener("click", async (e) => {
