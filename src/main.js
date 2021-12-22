@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import marketplaceAbi from '../contract/marketplace.abi.json';
 import erc20Abi from "../contract/erc20.abi.json";
 
-const MPContractAddress = "0x37D55b34c7b6D30E66B7F31Fb0c2CfDdbBb8c838"; // Marketplace contract address
+const MPContractAddress = "0x1Ddca354FF9269F9CC4122730A4B82F7eA66cb94"; // Marketplace contract address
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"; // cUSD contract address
 const ERC20_DECIMALS = 18;
 
@@ -51,9 +51,9 @@ const getBalance = async () => {
 }
 
 const getTotalPriceOfNFTs = async () => {
-    const totalPrice = await contract.methods.getTotalPriceOfNFTs().call();
-    const cUSDPrice = totalPrice.shiftedBy(-ERC20_DECIMALS).toFixed(2);
-    document.querySelector("#totalPrice").textContent = cUSDPrice;
+    let totalPrice = await contract.methods.getTotalPriceOfNFTs().call();
+    totalPrice /= Math.pow(10, ERC20_DECIMALS).toFixed(2);
+    document.querySelector("#totalPrice").textContent = totalPrice;
 }
 
 const getProducts = async () => {
@@ -69,8 +69,8 @@ const getProducts = async () => {
                 name: p[1],
                 image: p[2],
                 description: p[3],
-                price: new BigNumber(p[5]), // Needs to be a bigNumber object 
-                sold: p[6],
+                price: new BigNumber(p[4]), // Needs to be a bigNumber object 
+                sold: p[5],
             });
             reject(error => { console.log(error) }); // Reject the promise if there is an error    
         });
@@ -95,11 +95,13 @@ function renderProducts() {
 }
 
 function productTemplate(product) {
+    const productSold = parseInt(product.sold);
+    const productPrice = (product.price / Math.pow(10, ERC20_DECIMALS).toFixed(2));
     return `
         <div class="card border-secondary mb-4">
             <img class="card-img-top" src="${product.image}" alt="Card image">
-            <div class="position-absolute top-0 end-0 ${product.sold ? `bg-danger text-white` : `bg-warning`} mt-4 px-2 py-1 rounded-start">
-                ${product.sold ? "Sold" : "For Sale"}
+            <div class="position-absolute top-0 end-0 ${productSold ? `bg-danger text-white` : `bg-warning`} mt-4 px-2 py-1 rounded-start">
+                ${productSold ? "Sold" : "For Sale"}
             </div>
             <div class="card-body text-left p-4 position-relative">
                 <div class="translate-middle-y position-absolute top-0">
@@ -110,8 +112,8 @@ function productTemplate(product) {
                 ${product.description}             
                 </p>
                 <div class="d-grid gap-2">
-                <a class="btn btn-lg buyBtn fs-6 p-3 ${product.sold ? "btn-secondary disabled" : "btn-outline-dark"}" id=${product.index}>
-                    Buy for ${product.price.shiftedBy(-ERC20_DECIMALS).toFixed(2)} cUSD
+                <a class="btn btn-lg buyBtn fs-6 p-3 ${productSold ? "btn-secondary disabled" : "btn-outline-dark"}" id=${product.index}>
+                    Buy for ${productPrice} cUSD
                 </a>
             </div>
           </div>
@@ -151,9 +153,9 @@ window.addEventListener("load", async () => {
     notification("⌛ Loading...");
     await connectCeloWallet();
     await getBalance();
-    //await getTotalPriceOfNFTs();
+    await getTotalPriceOfNFTs();
     await getProducts();
-    //await getContractAddress();
+    await getContractAddress();
     notificationOff();
 });
 
@@ -177,15 +179,15 @@ document.querySelector("#newProductBtn").addEventListener("click", async () => {
     ];
     notification(`⌛ Adding "${params[0]}"...`);
 
-    try {
-        const result = await contract.methods
-            .writeProduct(...params)
-            .send({ from: kit.defaultAccount }) // Sebd a trabsaction to the contract, using the default account
-    } catch (error) {
-        notification(`⚠️ ${error}.`)
-    }
-    notification(`🎉 You successfully added "${params[0]}".`);
-    getProducts();
+    contract.methods.writeProduct(...params).send({ from: kit.defaultAccount }).then(async (res) => {
+        console.log(res);
+        notification(`🎉 You successfully added "${params[0]}".`);
+        await getProducts();
+        await getTotalPriceOfNFTs();
+    }).catch(err => {
+        console.log(err);
+        notification(`⚠️ ${error}.`);
+    });
 });
 
 document.querySelector("#marketplace").addEventListener("click", async (e) => {
