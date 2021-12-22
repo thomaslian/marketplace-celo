@@ -88,8 +88,8 @@ function productTemplate(product) {
     return `
         <div class="card border-secondary mb-4">
             <img class="card-img-top" src="${product.image}" alt="Card image">
-            <div class="position-absolute top-0 end-0 bg-warning mt-4 px-2 py-1 rounded-start">
-                ${product.sold} Sold
+            <div class="position-absolute top-0 end-0 ${product.sold ? `bg-danger text-white` : `bg-warning`} mt-4 px-2 py-1 rounded-start">
+                ${product.sold ? "Sold" : "For Sale"}
             </div>
             <div class="card-body text-left p-4 position-relative">
                 <div class="translate-middle-y position-absolute top-0">
@@ -100,7 +100,7 @@ function productTemplate(product) {
                 ${product.description}             
                 </p>
                 <div class="d-grid gap-2">
-                <a class="btn btn-lg btn-outline-dark buyBtn fs-6 p-3" id=${product.index}>
+                <a class="btn btn-lg buyBtn fs-6 p-3 ${product.sold ? "btn-secondary disabled" : "btn-outline-dark"}" id=${product.index}>
                     Buy for ${product.price.shiftedBy(-ERC20_DECIMALS).toFixed(2)} cUSD
                 </a>
             </div>
@@ -146,12 +146,22 @@ window.addEventListener("load", async () => {
 });
 
 document.querySelector("#newProductBtn").addEventListener("click", async () => {
+    const name = document.getElementById("newProductName").value;
+    const imageUrl = document.getElementById("newImgUrl").value;
+    const description = document.getElementById("newProductDescription").value;
+    const price = document.getElementById("newPrice").value;
+
+    if (!name, !imageUrl, !description, !price) {
+        notification("⚠️ Please fill in all fields in the form.");
+        return;
+    }
+
     const params = [
-        document.getElementById("newProductName").value,
-        document.getElementById("newImgUrl").value,
-        document.getElementById("newProductDescription").value,
+        name,
+        imageUrl,
+        description,
         // Create a bigNumber object so the contract can read it
-        new BigNumber(document.getElementById("newPrice").value).shiftedBy(ERC20_DECIMALS).toString()
+        new BigNumber(price).shiftedBy(ERC20_DECIMALS).toString()
     ];
     notification(`⌛ Adding "${params[0]}"...`);
 

@@ -25,7 +25,7 @@ contract Marketplace {
         string image;
         string description;
         uint price;
-        uint sold;
+        bool sold;
     }
 
     mapping (uint => Product) internal products;
@@ -36,7 +36,7 @@ contract Marketplace {
         string memory _description,
         uint _price
     ) public {
-        uint _sold = 0;
+        bool _sold = false;
         products[productsLength] = Product(
             payable(msg.sender),
             _name,
@@ -54,7 +54,7 @@ contract Marketplace {
         string memory, 
         string memory,
         uint, 
-        uint
+        bool
     ) {
         return (
             products[_index].owner,
@@ -75,7 +75,7 @@ contract Marketplace {
           ),
           "Transfer failed."
         );
-        products[_index].sold++;
+        products[_index].sold = true;
     }
     
     function getProductsLength() public view returns (uint) {
