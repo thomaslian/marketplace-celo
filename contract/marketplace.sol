@@ -25,6 +25,7 @@ contract Marketplace {
         string image;
         string description;
         uint price;
+        uint prevPrice;
         bool sold;
     }
 
@@ -34,6 +35,7 @@ contract Marketplace {
         string memory _name,
         string memory _image,
         string memory _description,
+        uint _prevPrice,
         uint _price
     ) public {
         bool _sold = false;
@@ -43,6 +45,7 @@ contract Marketplace {
             _image,
             _description,
             _price,
+            _prevPrice,
             _sold
         );
         productsLength++;
@@ -54,6 +57,7 @@ contract Marketplace {
         string memory, 
         string memory,
         uint, 
+        uint,
         bool
     ) {
         return (
@@ -62,6 +66,7 @@ contract Marketplace {
             products[_index].image, 
             products[_index].description, 
             products[_index].price,
+            products[_index].prevPrice,
             products[_index].sold
         );
     }
@@ -76,9 +81,24 @@ contract Marketplace {
           "Transfer failed."
         );
         products[_index].sold = true;
+        products[_index].prevPrice = products[_index].price;
     }
     
     function getProductsLength() public view returns (uint) {
         return (productsLength);
+    }
+
+    function getContractAddress() public view returns (address) {
+        return (address(this));
+    }
+
+    function getTotalPriceOfNFTs() public view returns (uint) {
+        uint _totalPrice = 0;
+        if (productsLength > 0) {
+            for (uint i = 0; i < productsLength; i++) {
+                _totalPrice += products[i].price;
+            }
+        }
+        return (_totalPrice);
     }
 }

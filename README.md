@@ -5,6 +5,8 @@ Celo: [docs.celo.org/welcome](https://docs.celo.org/welcome)
 
 Build on Celo: [docs.celo.org/developer-guide/overview](https://docs.celo.org/developer-guide/overview)
 
+Contract deployed with [remix.ethereum.org](https://remix.ethereum.org/)
+
 ## How to interact with this contract
 
 Follow the steps below before you go to [marketplace-celo.herokuapp.com](https://marketplace-celo.herokuapp.com/) (deployed at heroku) to interact with the contract.

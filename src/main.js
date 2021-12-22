@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import marketplaceAbi from '../contract/marketplace.abi.json';
 import erc20Abi from "../contract/erc20.abi.json";
 
-const MPContractAddress = "0xb3b8F2f1ade9BEbd94433e8400000C5F7887606e"; // Marketplace contract address
+const MPContractAddress = "0x6D1d2d9180e0596b1DaD7C4165d12218D927b633"; // Marketplace contract address
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"; // cUSD contract address
 const ERC20_DECIMALS = 18;
 
@@ -50,6 +50,12 @@ const getBalance = async () => {
     document.querySelector("#balance").textContent = cUSDBalance;
 }
 
+const getTotalPriceOfNFTs = async () => {
+    const totalPrice = await contract.methods.getTotalPriceOfNFTs().call();
+    const cUSDPrice = totalPrice.shiftedBy(-ERC20_DECIMALS).toFixed(2);
+    document.querySelector("#totalPrice").textContent = cUSDPrice;
+}
+
 const getProducts = async () => {
     const productsLength = await contract.methods.getProductsLength().call();
     const _products = [];
@@ -72,6 +78,10 @@ const getProducts = async () => {
     }
     products = await Promise.all(_products);
     renderProducts();
+}
+
+const getContractAddress = async () => {
+    console.log(await contract.methods.getContractAddress().call());
 }
 
 function renderProducts() {
@@ -141,7 +151,9 @@ window.addEventListener("load", async () => {
     notification("⌛ Loading...");
     await connectCeloWallet();
     await getBalance();
+    //await getTotalPriceOfNFTs();
     await getProducts();
+    //await getContractAddress();
     notificationOff();
 });
 
