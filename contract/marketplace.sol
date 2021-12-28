@@ -14,6 +14,26 @@ interface IERC20Token {
   event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
+library SafeMath {
+    /**
+     * @dev Returns the addition of two unsigned integers, reverting on
+     * overflow.
+     *
+     * Counterpart to Solidity's `+` operator.
+     *
+     * Requirements:
+     *
+     * - Addition cannot overflow.
+     */
+    function add(uint256 a, uint256 b) internal pure returns (uint256) {
+        uint256 c = a + b;
+        require(c >= a, "SafeMath: addition overflow");
+
+        return c;
+    }
+
+}
+
 contract Marketplace {
 
     uint internal productsLength = 0;
@@ -47,7 +67,7 @@ contract Marketplace {
             0,
             _sold
         );
-        productsLength++;
+        productsLength.add(1);
     }
 
     function readProduct(uint _index) public view returns (
