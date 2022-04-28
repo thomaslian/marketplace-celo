@@ -49,7 +49,12 @@ contract Marketplace {
         bool sold;
     }
 
-    mapping (uint => Product) internal products;
+    mapping (uint => Product) public products;
+
+    modifier onlyOwner(uint _index){
+        require(products[_index].owner == msg.sender, "only the owner can call this function");
+        _;
+    }
     
     modifier isNotOwner(uint _index) {
       require(products[_index].owner != payable(msg.sender), "you can not buy NFT listed by you!");
@@ -74,24 +79,19 @@ contract Marketplace {
         productsLength.add(1);
     }
 
-    function readProduct(uint _index) public view returns (
-        address payable,
-        string memory, 
-        string memory, 
-        string memory,
-        uint, 
-        uint,
-        bool
-    ) {
-        return (
-            products[_index].owner,
-            products[_index].name, 
-            products[_index].image, 
-            products[_index].description, 
-            products[_index].price,
-            products[_index].prevPrice,
-            products[_index].sold
-        );
+      function edit(
+          uint _index,
+        string memory _name,
+        string memory _image,
+        string memory _description,
+        uint _price
+    ) onlyOwner(_index) public {
+        products[_index].name = _name;
+         products[_index].image = _image;
+          products[_index].description = _description;
+          
+          products[_index].price = _price;
+
     }
     
     function buyProduct(uint _index) isNotOwner(_index) public payable  {
