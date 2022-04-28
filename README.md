@@ -19,9 +19,9 @@ Follow the steps below before you go to [marketplace-celo.herokuapp.com](https:/
 
 
 ## Deployed Contract
-Deployed at the Alfajores testnet with contract address [0x1Ddca354FF9269F9CC4122730A4B82F7eA66cb94](https://alfajores-blockscout.celo-testnet.org/address/0x1Ddca354FF9269F9CC4122730A4B82F7eA66cb94/transactions)
+Deployed at the Alfajores testnet with contract address [0xf4b26aeadd8fcaf64b87c9981e34b17e6aad9bb6](https://alfajores-blockscout.celo-testnet.org/address/0xf4b26aeadd8fcaf64b87c9981e34b17e6aad9bb6/transactions)
 
-Transaction: [0xe1e9a04fe1b0f5d52dbde06ccfb14bbf1973ae739a2ff3ecce3a07f724ffbbf7](https://alfajores-blockscout.celo-testnet.org/tx/0xe1e9a04fe1b0f5d52dbde06ccfb14bbf1973ae739a2ff3ecce3a07f724ffbbf7/internal-transactions)
+Transaction: [0xb8c30f168815a1d582947682eb66c5131f4824d061e17f632181471c7d049de6](https://alfajores-blockscout.celo-testnet.org/tx/0xb8c30f168815a1d582947682eb66c5131f4824d061e17f632181471c7d049de6/internal-transactions)
 
 ## Run locally
 

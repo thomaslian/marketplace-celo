@@ -14,26 +14,6 @@ interface IERC20Token {
   event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
-library SafeMath {
-    /**
-     * @dev Returns the addition of two unsigned integers, reverting on
-     * overflow.
-     *
-     * Counterpart to Solidity's `+` operator.
-     *
-     * Requirements:
-     *
-     * - Addition cannot overflow.
-     */
-    function add(uint256 a, uint256 b) internal pure returns (uint256) {
-        uint256 c = a + b;
-        require(c >= a, "SafeMath: addition overflow");
-
-        return c;
-    }
-
-}
-
 contract Marketplace {
 
     uint internal productsLength = 0;
@@ -49,17 +29,8 @@ contract Marketplace {
         bool sold;
     }
 
-    mapping (uint => Product) public products;
+    mapping (uint => Product) internal products;
 
-    modifier onlyOwner(uint _index){
-        require(products[_index].owner == msg.sender, "only the owner can call this function");
-        _;
-    }
-    
-    modifier isNotOwner(uint _index) {
-      require(products[_index].owner != payable(msg.sender), "you can not buy NFT listed by you!");
-    }
-    
     function writeProduct(
         string memory _name,
         string memory _image,
@@ -76,25 +47,30 @@ contract Marketplace {
             0,
             _sold
         );
-        productsLength.add(1);
+        productsLength++;
     }
 
-      function edit(
-          uint _index,
-        string memory _name,
-        string memory _image,
-        string memory _description,
-        uint _price
-    ) onlyOwner(_index) public {
-        products[_index].name = _name;
-         products[_index].image = _image;
-          products[_index].description = _description;
-          
-          products[_index].price = _price;
-
+    function readProduct(uint _index) public view returns (
+        address payable,
+        string memory, 
+        string memory, 
+        string memory,
+        uint, 
+        uint,
+        bool
+    ) {
+        return (
+            products[_index].owner,
+            products[_index].name, 
+            products[_index].image, 
+            products[_index].description, 
+            products[_index].price,
+            products[_index].prevPrice,
+            products[_index].sold
+        );
     }
     
-    function buyProduct(uint _index) isNotOwner(_index) public payable  {
+    function buyProduct(uint _index) public payable {
         require(
           IERC20Token(cUsdTokenAddress).transferFrom(
             msg.sender,
