@@ -30,7 +30,11 @@ contract Marketplace {
     }
 
     mapping (uint => Product) internal products;
-
+    
+    modifier isNotOwner(uint _index) {
+      require(products[_index].owner != payable(msg.sender), "you can not buy NFT listed by you!");
+    }
+    
     function writeProduct(
         string memory _name,
         string memory _image,
@@ -70,7 +74,7 @@ contract Marketplace {
         );
     }
     
-    function buyProduct(uint _index) public payable  {
+    function buyProduct(uint _index) isNotOwner(_index) public payable  {
         require(
           IERC20Token(cUsdTokenAddress).transferFrom(
             msg.sender,
